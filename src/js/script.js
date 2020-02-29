@@ -22,6 +22,8 @@ function printPosts(arr){
                 <p>${elem.body}</p>
               </article>`
   })
+  postsContainer.innerHTML == '' ? postsContainer.innerHTML += `<p>brak postów do wyświetlenia</p><button class="button" onclick="printPosts(postsArr)">pokaż wszystkie posty</button>` : postsContainer.innerHTML;
+  postsArr != arr ? postsContainer.innerHTML += `<button class="button" onclick="printPosts(postsArr)">pokaż wszystkie posty</button>` : postsContainer.innerHTML;
 }
 
 //fetch the posts from API
@@ -42,14 +44,35 @@ function fetchPosts(){
 function listenForm(){
   formSubmit.addEventListener('click', (event) => {
     event.preventDefault();
+    const filteredArr = [];
 
-    const postAuthors = document.querySelectorAll('.post-author');
-    const postTitles = document.querySelectorAll('.post-title');
-    const filteredPosts = [];
+    if(inputTitle.value || inputAuthor.value){
 
-    //console.log(postsArr)
-    //console.log(inputTitle.value, inputAuthor.value)
-    //console.log(postAuthors, postTitles);
+      if(inputTitle.value && inputAuthor.value){
+        for(let post of postsArr){
+          if(inputAuthor.value == post.userId && (post.title.indexOf(inputTitle.value) > -1)){
+            filteredArr.push(post);
+          }
+        }
+      }
+
+      else if(inputTitle.value){
+        for(let post of postsArr){
+          if(post.title.indexOf(inputTitle.value) > -1){
+            filteredArr.push(post);
+          }
+        }
+      }
+
+      else if(inputAuthor.value){
+        for(let post of postsArr){
+          if(inputAuthor.value == post.userId){
+            filteredArr.push(post);
+          }
+        }
+      }
+      printPosts(filteredArr);
+    }
   })
 }
 
