@@ -15,14 +15,14 @@ function printPosts(arr){
   postsContainer.innerHTML = '';
   arr.map(elem => {
     postsContainer.innerHTML +=
-              `<article class="article">
+              `<article>
                 <h2 class="post-title">${elem.title}</h2>
                 <p class="post-id">Id posta: ${elem.id}</p>
                 <p class="post-author">Id autora: ${elem.userId}</p>
                 <p>${elem.body}</p>
-              </article>`
-  })
-  postsContainer.innerHTML == '' ? postsContainer.innerHTML += `<p>brak postów do wyświetlenia</p><button class="button" onclick="printPosts(postsArr)">pokaż wszystkie posty</button>` : postsContainer.innerHTML;
+              </article>`;
+  });
+  (arr.length == 0 && postsArr.length > 0) ? postsContainer.innerHTML += `<p>Brak postów spełniających kryteria</p>` : postsContainer.innerHTML;
   postsArr != arr ? postsContainer.innerHTML += `<button class="button" onclick="printPosts(postsArr)">pokaż wszystkie posty</button>` : postsContainer.innerHTML;
 }
 
@@ -30,13 +30,17 @@ function printPosts(arr){
 
 function fetchPosts(){
   fetch('https://jsonplaceholder.typicode.com/posts')
-  .then((response) => {
-    return response.json();
-  })
-  .then((data) => {
-    postsArr = data;
-    printPosts(postsArr);
-  });
+    .then((response) => {
+      return response.json();
+    })
+    .then((data) => {
+      postsArr = data;
+      printPosts(postsArr);
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+      postsContainer.innerHTML += `<p>Coś poszło nie tak :( <br>Spróbuj odświeżyć stronę</p>`;
+    });
 }
 
 //filter posts
@@ -73,7 +77,7 @@ function listenForm(){
       }
       printPosts(filteredArr);
     }
-  })
+  });
 }
 
 
